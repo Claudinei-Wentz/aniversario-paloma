@@ -81,10 +81,44 @@ function updateCountdown() {
 updateCountdown();
 setInterval(updateCountdown, 1000);
 setupRaceMotionPath();
+setupFinishLineBurst();
 
 if (!prefersReducedMotion) {
   setupCardTilt();
   setupFlagBurst();
+}
+
+function setupFinishLineBurst() {
+  const raceFrame = document.querySelector(".race-frame");
+  const runnerGroups = document.querySelectorAll(".runner-group");
+
+  if (!raceFrame || runnerGroups.length === 0) {
+    return;
+  }
+
+  const palette = ["#c13a2a", "#f5b700", "#2f6db2", "#3d8f3d", "#ff7d4d"];
+
+  const burstAtFinishLine = () => {
+    const styles = getComputedStyle(raceFrame);
+    const laneCenter = parseFloat(styles.getPropertyValue("--lane-center")) || 16;
+    const rect = raceFrame.getBoundingClientRect();
+    const point = mapPointerToScene(rect.left + rect.width / 2, rect.top + laneCenter);
+    createBurst(point.x, point.y, palette);
+  };
+
+  runnerGroups.forEach((runner) => {
+    runner.addEventListener("animationiteration", (event) => {
+      if (event.target !== runner) {
+        return;
+      }
+
+      if (event.animationName !== "follow-path" && event.animationName !== "lap-around") {
+        return;
+      }
+
+      burstAtFinishLine();
+    });
+  });
 }
 
 function setupRaceMotionPath() {
