@@ -16,6 +16,7 @@ const cards = document.querySelectorAll(".hero, .countdown-card, .about-card");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const pad = (value) => String(value).padStart(2, "0");
+const uiScale = getUIScale();
 
 function isBirthdayToday(now) {
   return now.getDate() === birthInfo.day && now.getMonth() === birthInfo.month - 1;
@@ -191,7 +192,8 @@ function setupFlagBurst() {
   let lastTrailTime = 0;
 
   document.addEventListener("pointerdown", (event) => {
-    createBurst(event.clientX, event.clientY, palette);
+    const point = mapPointerToScene(event.clientX, event.clientY);
+    createBurst(point.x, point.y, palette);
   });
 
   if (!supportsFinePointer) {
@@ -206,7 +208,8 @@ function setupFlagBurst() {
     }
 
     lastTrailTime = now;
-    createBurst(event.clientX, event.clientY, palette, {
+    const point = mapPointerToScene(event.clientX, event.clientY);
+    createBurst(point.x, point.y, palette, {
       pieces: 4,
       minDistance: 10,
       maxDistance: 28,
@@ -221,6 +224,27 @@ function setupFlagBurst() {
       height: 10
     });
   });
+}
+
+function getUIScale() {
+  const value = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ui-scale"));
+
+  if (!Number.isFinite(value) || value <= 0) {
+    return 1;
+  }
+
+  return value;
+}
+
+function mapPointerToScene(x, y) {
+  if (uiScale === 1) {
+    return { x, y };
+  }
+
+  return {
+    x: x / uiScale,
+    y: y / uiScale
+  };
 }
 
 function createBurst(x, y, palette, options = {}) {
