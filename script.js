@@ -12,7 +12,7 @@ const elements = {
   status: document.getElementById("status"),
   targetDate: document.getElementById("target-date")
 };
-const cards = document.querySelectorAll(".hero, .countdown-card, .about-card, .track-card");
+const cards = document.querySelectorAll(".hero, .countdown-card, .about-card");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const pad = (value) => String(value).padStart(2, "0");
@@ -71,11 +71,10 @@ function updateCountdown() {
   const hours = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
   const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
   const seconds = totalSeconds % 60;
-  const ageOnNextBirthday = target.getFullYear() - birthInfo.year;
   const dayWord = days === 1 ? "dia" : "dias";
 
   setValues(days, hours, minutes, seconds);
-  elements.status.textContent = `Faltam ${days} ${dayWord} para a Paloma completar ${ageOnNextBirthday} anos.`;
+  elements.status.textContent = `Faltam ${days} ${dayWord} para Paloma completar 30 aninhos.`;
 }
 
 updateCountdown();
@@ -142,3 +141,4 @@ function createBurst(x, y, palette) {
     spark.addEventListener("animationend", () => spark.remove(), { once: true });
   }
 }
+
