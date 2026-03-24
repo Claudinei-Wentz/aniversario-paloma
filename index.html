@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arraiá da Paloma | Contagem Regressiva</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="bg-shapes" aria-hidden="true">
+    <span class="shape s1"></span>
+    <span class="shape s2"></span>
+    <span class="shape s3"></span>
+    <span class="shape s4"></span>
+  </div>
+
+  <header class="flags" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <p class="chip">Contagem Regressiva Especial</p>
+      <h1>Arraiá da Corredora Paloma</h1>
+      <p class="subtitle">
+        Um clima de festa junina com energia de corrida para celebrar o próximo 1º de junho.
+      </p>
+      <p class="next-date">Próxima chegada: <strong id="target-date">--/--/----</strong></p>
+      <p class="interaction-tip">Toque ou clique na tela para soltar bandeirinhas.</p>
+    </section>
+
+    <section class="countdown-card" aria-live="polite">
+      <h2>Falta pouco para o grande dia</h2>
+      <div class="timer" role="timer" aria-label="Contagem regressiva para o aniversário da Paloma">
+        <article class="unit">
+          <strong id="days">00</strong>
+          <span>Dias</span>
+        </article>
+        <article class="unit">
+          <strong id="hours">00</strong>
+          <span>Horas</span>
+        </article>
+        <article class="unit">
+          <strong id="minutes">00</strong>
+          <span>Minutos</span>
+        </article>
+        <article class="unit">
+          <strong id="seconds">00</strong>
+          <span>Segundos</span>
+        </article>
+      </div>
+      <p id="status" class="status">Atualizando contagem...</p>
+    </section>
+
+    <section class="about-card">
+      <p>
+        Paloma nasceu em <strong>01/06/1996</strong> e merece uma celebração do jeitinho que ela gosta:
+        arraiá animado e espírito de corrida.
+      </p>
+      <p>
+        <strong>Policial militar</strong>, ela tem um coração que acelera qualquer corrida: especial, dedicada e o xodó mais animado de todos os amigos.
+      </p>
+    </section>
+
+    <section class="track-card" aria-hidden="true">
+      <div class="track"></div>
+      <div class="shoe-runner">
+        <div class="shoe">
+          <span class="lace l1"></span>
+          <span class="lace l2"></span>
+          <span class="lace l3"></span>
+        </div>
+      </div>
+      <div class="shoe-shadow"></div>
+    </section>
+  </main>
+</body>
+</html>
