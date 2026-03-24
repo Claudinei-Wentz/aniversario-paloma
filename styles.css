@@ -14,7 +14,7 @@
   --track-gap: clamp(8px, 1.3vw, 14px);
   --track-lane: clamp(14px, 2.2vw, 24px);
   --track-radius: clamp(16px, 3vw, 30px);
-  --lap-duration: 14.7s;
+  --lap-duration: 22s;
 }
 
 * {
@@ -189,6 +189,29 @@ h2 {
   opacity: 0.92;
 }
 
+.finish-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 12px;
+  height: calc(var(--track-lane) + 10px);
+  transform: translateX(-50%);
+  border-radius: 0 0 3px 3px;
+  background:
+    repeating-linear-gradient(
+      180deg,
+      #fdfcf8 0 5px,
+      #2f2f2f 5px 10px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.2) 0 6px,
+      rgba(0, 0, 0, 0.12) 6px 12px
+    );
+  box-shadow: 0 3px 8px rgba(40, 22, 12, 0.32);
+  z-index: 3;
+}
+
 .runner-group {
   --runner-lane-shift: 0px;
   --runner-duration: var(--lap-duration);
@@ -201,6 +224,14 @@ h2 {
   transform: translate(-50%, -50%);
   animation: lap-around var(--runner-duration) linear infinite;
   z-index: 2;
+}
+
+body.motion-path-ready .runner-group {
+  transform: none;
+  offset-distance: 0%;
+  offset-rotate: auto;
+  offset-anchor: 50% 50%;
+  animation-name: follow-path;
 }
 
 .runner-group::after {
@@ -230,20 +261,20 @@ h2 {
 }
 
 .runner-1 {
-  --runner-duration: 20s;
-  --runner-lane-shift: -4px;
+  --runner-duration: 30s;
+  --runner-lane-shift: 0px;
   animation-delay: 0s;
 }
 
 .runner-2 {
-  --runner-duration: 26s;
+  --runner-duration: 39s;
   --runner-lane-shift: 0px;
   animation-delay: 0s;
 }
 
 .runner-3 {
-  --runner-duration: 18s;
-  --runner-lane-shift: 4px;
+  --runner-duration: 27s;
+  --runner-lane-shift: 0px;
   animation-delay: 0s;
 }
 
@@ -334,45 +365,55 @@ h2 {
 @keyframes lap-around {
   0%,
   100% {
-    left: calc(var(--lane-center) + var(--runner-lane-shift) + var(--corner-nudge));
+    left: 50%;
     top: calc(var(--lane-center) + var(--runner-lane-shift));
     transform: translate(-50%, -50%) rotate(0deg);
   }
-  24% {
+  12% {
     left: calc(100% - var(--lane-center) - var(--runner-lane-shift) - var(--corner-nudge));
     top: calc(var(--lane-center) + var(--runner-lane-shift));
     transform: translate(-50%, -50%) rotate(0deg);
   }
-  26% {
+  14% {
     left: calc(100% - var(--lane-center) - var(--runner-lane-shift));
     top: calc(var(--lane-center) + var(--runner-lane-shift) + var(--corner-nudge));
     transform: translate(-50%, -50%) rotate(90deg);
   }
-  49% {
+  37% {
     left: calc(100% - var(--lane-center) - var(--runner-lane-shift));
     top: calc(100% - var(--lane-center) - var(--runner-lane-shift) - var(--corner-nudge));
     transform: translate(-50%, -50%) rotate(90deg);
   }
-  51% {
+  39% {
     left: calc(100% - var(--lane-center) - var(--runner-lane-shift) - var(--corner-nudge));
     top: calc(100% - var(--lane-center) - var(--runner-lane-shift));
     transform: translate(-50%, -50%) rotate(180deg);
   }
-  74% {
+  62% {
     left: calc(var(--lane-center) + var(--runner-lane-shift) + var(--corner-nudge));
     top: calc(100% - var(--lane-center) - var(--runner-lane-shift));
     transform: translate(-50%, -50%) rotate(180deg);
   }
-  76% {
+  64% {
     left: calc(var(--lane-center) + var(--runner-lane-shift));
     top: calc(100% - var(--lane-center) - var(--runner-lane-shift) - var(--corner-nudge));
     transform: translate(-50%, -50%) rotate(270deg);
   }
-  99% {
+  87% {
     left: calc(var(--lane-center) + var(--runner-lane-shift));
     top: calc(var(--lane-center) + var(--runner-lane-shift) + var(--corner-nudge));
     transform: translate(-50%, -50%) rotate(270deg);
   }
+  89% {
+    left: calc(var(--lane-center) + var(--runner-lane-shift) + var(--corner-nudge));
+    top: calc(var(--lane-center) + var(--runner-lane-shift));
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
+@keyframes follow-path {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
 }
 
 @keyframes run-bob {

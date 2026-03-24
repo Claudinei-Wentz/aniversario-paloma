@@ -74,15 +74,89 @@ function updateCountdown() {
   const dayWord = days === 1 ? "dia" : "dias";
 
   setValues(days, hours, minutes, seconds);
-  elements.status.textContent = `Faltam ${days} ${dayWord} para Paloma completar 30 aninhos.`;
+  elements.status.textContent = `Faltam ${days} ${dayWord} para Paloma completar 30 aninhos. Estamos todos aguardando por uma arraiá animada e muita diversão!`;
 }
 
 updateCountdown();
 setInterval(updateCountdown, 1000);
+setupRaceMotionPath();
 
 if (!prefersReducedMotion) {
   setupCardTilt();
   setupFlagBurst();
+}
+
+function setupRaceMotionPath() {
+  const raceFrame = document.querySelector(".race-frame");
+  const runnerGroups = document.querySelectorAll(".runner-group");
+
+  if (!raceFrame || runnerGroups.length === 0) {
+    return;
+  }
+
+  const supportsMotionPath =
+    typeof CSS !== "undefined" &&
+    (CSS.supports("offset-path", 'path("M 0 0 L 1 1")') ||
+      CSS.supports("-webkit-offset-path", 'path("M 0 0 L 1 1")'));
+
+  if (!supportsMotionPath) {
+    return;
+  }
+
+  document.body.classList.add("motion-path-ready");
+  let rafId = 0;
+
+  const updatePath = () => {
+    rafId = 0;
+    const styles = getComputedStyle(raceFrame);
+    const laneCenter = parseFloat(styles.getPropertyValue("--lane-center")) || 16;
+    const cornerRaw = parseFloat(styles.getPropertyValue("--corner-nudge")) || 20;
+    const width = raceFrame.clientWidth;
+    const height = raceFrame.clientHeight;
+
+    if (width < laneCenter * 2 + 4 || height < laneCenter * 2 + 4) {
+      return;
+    }
+
+    const left = laneCenter;
+    const right = width - laneCenter;
+    const top = laneCenter;
+    const bottom = height - laneCenter;
+    const halfWidth = (right - left) / 2;
+    const halfHeight = (bottom - top) / 2;
+    const corner = Math.max(6, Math.min(cornerRaw, halfWidth - 2, halfHeight - 2));
+    const topCenter = width / 2;
+
+    const path = [
+      `M ${topCenter.toFixed(2)} ${top.toFixed(2)}`,
+      `L ${(right - corner).toFixed(2)} ${top.toFixed(2)}`,
+      `L ${right.toFixed(2)} ${(top + corner).toFixed(2)}`,
+      `L ${right.toFixed(2)} ${(bottom - corner).toFixed(2)}`,
+      `L ${(right - corner).toFixed(2)} ${bottom.toFixed(2)}`,
+      `L ${(left + corner).toFixed(2)} ${bottom.toFixed(2)}`,
+      `L ${left.toFixed(2)} ${(bottom - corner).toFixed(2)}`,
+      `L ${left.toFixed(2)} ${(top + corner).toFixed(2)}`,
+      `L ${(left + corner).toFixed(2)} ${top.toFixed(2)}`,
+      `L ${topCenter.toFixed(2)} ${top.toFixed(2)}`
+    ].join(" ");
+
+    const pathValue = `path("${path}")`;
+    runnerGroups.forEach((runner) => {
+      runner.style.offsetPath = pathValue;
+      runner.style.webkitOffsetPath = pathValue;
+    });
+  };
+
+  const requestPathUpdate = () => {
+    if (rafId) {
+      return;
+    }
+
+    rafId = window.requestAnimationFrame(updatePath);
+  };
+
+  requestPathUpdate();
+  window.addEventListener("resize", requestPathUpdate, { passive: true });
 }
 
 function setupCardTilt() {
