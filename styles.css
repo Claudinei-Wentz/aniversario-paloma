@@ -14,7 +14,7 @@
   --track-gap: clamp(8px, 1.3vw, 14px);
   --track-lane: clamp(14px, 2.2vw, 24px);
   --track-radius: clamp(16px, 3vw, 30px);
-  --lap-duration: 9.8s;
+  --lap-duration: 14.7s;
 }
 
 * {
@@ -230,19 +230,19 @@ h2 {
 }
 
 .runner-1 {
-  --runner-duration: 8.4s;
+  --runner-duration: 20s;
   --runner-lane-shift: -4px;
   animation-delay: -1.6s;
 }
 
 .runner-2 {
-  --runner-duration: 10.3s;
+  --runner-duration: 26s;
   --runner-lane-shift: 0px;
   animation-delay: -4.8s;
 }
 
 .runner-3 {
-  --runner-duration: 12.1s;
+  --runner-duration: 18s;
   --runner-lane-shift: 4px;
   animation-delay: -7.2s;
 }
