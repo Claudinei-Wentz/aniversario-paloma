@@ -113,22 +113,66 @@ function setupCardTilt() {
 
 function setupFlagBurst() {
   const palette = ["#c13a2a", "#f5b700", "#2f6db2", "#3d8f3d", "#ff7d4d"];
+  const supportsFinePointer = window.matchMedia("(pointer: fine)").matches;
+  let lastTrailTime = 0;
 
   document.addEventListener("pointerdown", (event) => {
     createBurst(event.clientX, event.clientY, palette);
   });
+
+  if (!supportsFinePointer) {
+    return;
+  }
+
+  document.addEventListener("pointermove", (event) => {
+    const now = performance.now();
+
+    if (now - lastTrailTime < 50) {
+      return;
+    }
+
+    lastTrailTime = now;
+    createBurst(event.clientX, event.clientY, palette, {
+      pieces: 4,
+      minDistance: 10,
+      maxDistance: 28,
+      dyBias: 6,
+      jitter: 0.22,
+      maxRotation: 150,
+      opacity: 0.5,
+      durationMs: 620,
+      scaleFrom: 0.22,
+      scaleTo: 0.65,
+      width: 8,
+      height: 10
+    });
+  });
 }
 
-function createBurst(x, y, palette) {
-  const pieces = 18;
+function createBurst(x, y, palette, options = {}) {
+  const {
+    pieces = 18,
+    minDistance = 36,
+    maxDistance = 108,
+    dyBias = 24,
+    jitter = 0.35,
+    maxRotation = 330,
+    opacity = 1,
+    durationMs = 920,
+    scaleFrom = 0.35,
+    scaleTo = 1,
+    width = 12,
+    height = 15
+  } = options;
+  const distanceRange = Math.max(maxDistance - minDistance, 0);
 
   for (let index = 0; index < pieces; index += 1) {
     const spark = document.createElement("span");
-    const angle = (Math.PI * 2 * index) / pieces + Math.random() * 0.35;
-    const distance = 36 + Math.random() * 72;
+    const angle = (Math.PI * 2 * index) / pieces + Math.random() * jitter;
+    const distance = minDistance + Math.random() * distanceRange;
     const dx = Math.cos(angle) * distance;
-    const dy = Math.sin(angle) * distance + 24;
-    const rotation = Math.floor(Math.random() * 330);
+    const dy = Math.sin(angle) * distance + dyBias;
+    const rotation = Math.floor(Math.random() * maxRotation);
 
     spark.className = "spark";
     spark.style.setProperty("--x", `${x}px`);
@@ -137,6 +181,12 @@ function createBurst(x, y, palette) {
     spark.style.setProperty("--dy", `${dy.toFixed(2)}px`);
     spark.style.setProperty("--rot", `${rotation}deg`);
     spark.style.setProperty("--spark-color", palette[index % palette.length]);
+    spark.style.setProperty("--spark-opacity", opacity.toFixed(2));
+    spark.style.setProperty("--spark-duration", `${durationMs}ms`);
+    spark.style.setProperty("--spark-scale-from", scaleFrom.toFixed(2));
+    spark.style.setProperty("--spark-scale-to", scaleTo.toFixed(2));
+    spark.style.setProperty("--spark-width", `${width}px`);
+    spark.style.setProperty("--spark-height", `${height}px`);
     document.body.appendChild(spark);
     spark.addEventListener("animationend", () => spark.remove(), { once: true });
   }
