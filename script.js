@@ -95,6 +95,52 @@ if (!prefersReducedMotion) {
   setupFlagBurst();
 }
 
+const boostPhrases = [
+  "Um pão de queijo aummm 🧀",
+  "Um ovinho mexido aummm 🍳",
+  "Mais um ovo aummm 🥚",
+  "Um pão de queijo a mais aummm 🧀",
+  "Um croissant de frango aummm 🥐",
+  "Um croissant de carne aummm 🥐",
+  "Uma empada aummm 🫓",
+  "Um suco de excelente natural aummm 🥤",
+  "Um ovo aummm 🥚",
+  "Um croissant de queijo e presunto aummm 🥐",
+  "Calabresa com cebola aummm 🌭"
+];
+
+function showBoostPhrase(event) {
+  const el = document.createElement("div");
+  el.className = "boost-phrase";
+  el.textContent = boostPhrases[Math.floor(Math.random() * boostPhrases.length)];
+
+  // Posiciona fora da tela inicialmente para medir
+  el.style.visibility = "hidden";
+  el.style.left = "0px";
+  el.style.top = "0px";
+  document.body.appendChild(el);
+
+  const elW = el.offsetWidth;
+  const elH = el.offsetHeight;
+  const margin = 10;
+  const vw = window.innerWidth / uiScale;
+  const vh = window.innerHeight / uiScale;
+
+  // Ponto do clique ajustado pelo zoom
+  let x = event.clientX / uiScale - elW / 2;
+  let y = event.clientY / uiScale - elH - 12;
+
+  // Clamp horizontal e vertical para não sair da tela
+  x = Math.min(Math.max(x, margin), vw - elW - margin);
+  y = Math.min(Math.max(y, margin), vh - elH - margin);
+
+  el.style.left = `${x}px`;
+  el.style.top = `${y}px`;
+  el.style.visibility = "";
+
+  el.addEventListener("animationend", () => el.remove());
+}
+
 function getRunnerAnimation(runner) {
   return runner.getAnimations().find(
     (a) => a.animationName === "follow-path" || a.animationName === "lap-around"
@@ -129,10 +175,11 @@ function setupRunnerBoost() {
     const boostedDurationMs = baseDurationMs * (1 - boostConfig.percent / 100);
     let currentDurationMs = baseDurationMs;
 
-    runner.addEventListener("click", () => {
+    runner.addEventListener("click", (event) => {
       applyDurationKeepingPosition(runner, boostedDurationMs, currentDurationMs);
       currentDurationMs = boostedDurationMs;
       runner.classList.add("boosted");
+      showBoostPhrase(event);
 
       if (boostTimer) clearTimeout(boostTimer);
 
