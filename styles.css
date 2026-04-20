@@ -16,6 +16,12 @@
   --track-lane: clamp(14px, 2.2vw, 24px);
   --track-radius: clamp(16px, 3vw, 30px);
   --lap-duration: 22s;
+
+  /* Velocidade de cada corredora (menor = mais rápida) */
+  /* 1 - Paloma /  2 - Daia /  3 - PC */
+  --speed-runner-1: 40s;
+  --speed-runner-2: 30s;
+  --speed-runner-3: 20s;
 }
 
 * {
@@ -274,19 +280,19 @@ body.motion-path-ready .runner-group {
 }
 
 .runner-1 {
-  --runner-duration: 30s;
+  --runner-duration: var(--speed-runner-1);
   --runner-lane-shift: 0px;
   animation-delay: 0s;
 }
 
 .runner-2 {
-  --runner-duration: 39s;
+  --runner-duration: var(--speed-runner-2);
   --runner-lane-shift: 0px;
   animation-delay: 0s;
 }
 
 .runner-3 {
-  --runner-duration: 27s;
+  --runner-duration: var(--speed-runner-3);
   --runner-lane-shift: 0px;
   animation-delay: 0s;
 }
