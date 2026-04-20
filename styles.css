@@ -22,6 +22,7 @@
   --speed-runner-1: 40s;
   --speed-runner-2: 30s;
   --speed-runner-3: 20s;
+  --speed-runner-4: 38s;
 }
 
 * {
@@ -293,6 +294,12 @@ body.motion-path-ready .runner-group {
 
 .runner-3 {
   --runner-duration: var(--speed-runner-3);
+  --runner-lane-shift: 0px;
+  animation-delay: 0s;
+}
+
+.runner-4 {
+  --runner-duration: var(--speed-runner-4);
   --runner-lane-shift: 0px;
   animation-delay: 0s;
 }
