@@ -235,6 +235,8 @@ h2 {
 .runner-group {
   --runner-lane-shift: 0px;
   --runner-duration: var(--lap-duration);
+  cursor: pointer;
+  pointer-events: auto;
   --runner-size: clamp(24px, 3.1vw, 36px);
   position: absolute;
   left: 0;
@@ -302,6 +304,11 @@ body.motion-path-ready .runner-group {
   --runner-duration: var(--speed-runner-4);
   --runner-lane-shift: 0px;
   animation-delay: 0s;
+}
+
+.runner-group.boosted .runner-image {
+  filter: drop-shadow(0 0 8px var(--accent-yellow)) drop-shadow(0 2px 4px rgba(70, 32, 12, 0.35)) brightness(1.2);
+  animation: run-bob 210ms ease-in-out infinite;
 }
 
 .bg-shapes {

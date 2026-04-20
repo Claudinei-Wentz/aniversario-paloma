@@ -78,14 +78,72 @@ function updateCountdown() {
   elements.status.textContent = `Faltam ${days} ${dayWord} para Paloma completar 30 aninhos. Estamos todos aguardando por uma arraiá animada e muita diversão!`;
 }
 
+// Configurações do boost ao clicar na corredora
+const boostConfig = {
+  percent: 20,      // aumento de velocidade (%)
+  durationMs: 5000  // duração do boost (ms)
+};
+
 updateCountdown();
 setInterval(updateCountdown, 1000);
 setupRaceMotionPath();
 setupFinishLineBurst();
+setupRunnerBoost();
 
 if (!prefersReducedMotion) {
   setupCardTilt();
   setupFlagBurst();
+}
+
+function getRunnerAnimation(runner) {
+  return runner.getAnimations().find(
+    (a) => a.animationName === "follow-path" || a.animationName === "lap-around"
+  );
+}
+
+function applyDurationKeepingPosition(runner, newDurationMs, currentDurationMs) {
+  const anim = getRunnerAnimation(runner);
+  const progress = anim
+    ? (anim.currentTime % currentDurationMs) / currentDurationMs
+    : 0;
+
+  runner.style.setProperty("--runner-duration", `${(newDurationMs / 1000).toFixed(2)}s`);
+
+  requestAnimationFrame(() => {
+    const updated = getRunnerAnimation(runner);
+    if (updated) updated.currentTime = progress * newDurationMs;
+  });
+}
+
+function setupRunnerBoost() {
+  const runnerGroups = document.querySelectorAll(".runner-group");
+  const rootStyles = getComputedStyle(document.documentElement);
+
+  runnerGroups.forEach((runner, index) => {
+    let boostTimer = null;
+    const varName = `--speed-runner-${index + 1}`;
+    const baseDurationMs = parseFloat(rootStyles.getPropertyValue(varName)) * 1000;
+
+    if (!baseDurationMs) return;
+
+    const boostedDurationMs = baseDurationMs * (1 - boostConfig.percent / 100);
+    let currentDurationMs = baseDurationMs;
+
+    runner.addEventListener("click", () => {
+      applyDurationKeepingPosition(runner, boostedDurationMs, currentDurationMs);
+      currentDurationMs = boostedDurationMs;
+      runner.classList.add("boosted");
+
+      if (boostTimer) clearTimeout(boostTimer);
+
+      boostTimer = setTimeout(() => {
+        applyDurationKeepingPosition(runner, baseDurationMs, currentDurationMs);
+        currentDurationMs = baseDurationMs;
+        runner.classList.remove("boosted");
+        boostTimer = null;
+      }, boostConfig.durationMs);
+    });
+  });
 }
 
 function setupFinishLineBurst() {
